@@ -1,16 +1,29 @@
 import React from "react";
-import PropTypes from "prop-types";
+import {
+  Container,
+  Input,
+  InputGroup,
+  InputGroupAddon,
+  Button,
+} from "reactstrap";
 
-const App = props => {
+const App = () => {
+  const [players, setPlayers] = React.useState(10);
   return (
-    <div>
-      App
-    </div>
+    <Container className="pt-3">
+      <h4 className="text-center mb-4">Выберите количество игроков</h4>
+      <InputGroup>
+        <Input
+          type="number"
+          value={players}
+          onChange={(e) => setPlayers(Number(e.target.value))}
+        />
+        <InputGroupAddon addonType="append">
+          <Button color="secondary">Начать</Button>
+        </InputGroupAddon>
+      </InputGroup>
+    </Container>
   );
-};
-
-App.propTypes = {
-
 };
 
 export default App;
