@@ -19,6 +19,18 @@ const App = () => {
   const [currentPlayer, setCurrentPlayer] = React.useState(0);
   const [hintIsVisible, setHintVisibility] = React.useState(false);
   const [timerIsOpen, setTimerIsOpen] = React.useState(false);
+  const [judahIndex, setJudahIndex] = React.useState(0);
+  const nextPlayer = () => {
+    if (players === currentPlayer) {
+      setHintVisibility(false);
+      setLocationVisibility(false);
+      setTimerIsOpen(true);
+      setCurrentPlayer(0);
+    } else {
+      setHintVisibility(true);
+      setLocationVisibility(false);
+    }
+  };
   return (
     <Container className="pt-3">
       <h4 className="text-center mb-4">Выберите количество игроков</h4>
@@ -33,6 +45,7 @@ const App = () => {
             color="secondary"
             onClick={() => {
               setHintVisibility(true);
+              setJudahIndex(randomInt(1, players));
             }}
           >
             Начать
@@ -40,23 +53,43 @@ const App = () => {
         </InputGroupAddon>
       </InputGroup>
       <Modal isOpen={locationIsVisible} className="text-center">
-        <ModalHeader className="w-100 d-block">
-          {locations[locationIndex]}
-        </ModalHeader>
-        <ModalBody className="text-justify">
-          Ты местный. <br /> Все игроки кроме Иуды знают эту локацию. Задавай
-          вопросы игрокам, чтобы вычислить кто из них Иуда.
-        </ModalBody>
-        <Button
-          color="primary"
-          className="m-2"
-          onClick={() => {
-            setHintVisibility(true);
-            setLocationVisibility(false);
-          }}
-        >
-          Ok
-        </Button>
+        {currentPlayer === judahIndex ? (
+          <>
+            <ModalHeader className="w-100 d-block">Иуда</ModalHeader>
+            <ModalBody className="text-justify">
+              Ты Иуда. <br /> Постарайся узнать локацию, о которой говорят
+              местные.
+            </ModalBody>
+            <Button
+              color="primary"
+              className="m-2"
+              onClick={() => {
+                nextPlayer();
+              }}
+            >
+              Ok
+            </Button>
+          </>
+        ) : (
+          <>
+            <ModalHeader className="w-100 d-block">
+              {locations[locationIndex]}
+            </ModalHeader>
+            <ModalBody className="text-justify">
+              Ты местный. <br /> Все игроки кроме Иуды знают эту локацию.
+              Задавай вопросы игрокам, чтобы вычислить кто из них Иуда.
+            </ModalBody>
+            <Button
+              color="primary"
+              className="m-2"
+              onClick={() => {
+                nextPlayer();
+              }}
+            >
+              Ok
+            </Button>
+          </>
+        )}
       </Modal>
       <Modal isOpen={hintIsVisible} className="text-center">
         <ModalHeader className="w-100 d-block">
@@ -67,25 +100,29 @@ const App = () => {
         <Button
           color="primary"
           className="m-2"
-          // onClick={() => setLocationVisibility(true)}
           onClick={() => {
             !currentPlayer && setLocationIndex(randomInt(0, locations.length));
-            if (players === currentPlayer) {
-              setTimerIsOpen(true);
-              setHintVisibility(false);
-              setCurrentPlayer(0);
-            } else {
-              setCurrentPlayer(currentPlayer + 1);
-              setHintVisibility(false);
-              setLocationVisibility(true);
-            }
+            setCurrentPlayer(currentPlayer + 1);
+            setHintVisibility(false);
+            setLocationVisibility(true);
           }}
         >
           Ok
         </Button>
       </Modal>
       <Modal isOpen={timerIsOpen} className="text-center">
-        <ModalBody>Время пошло!</ModalBody>
+        <ModalHeader className="w-100 d-block">Время пошло!</ModalHeader>
+        <ModalBody>
+          <Button
+            color="primary"
+            className="m-2"
+            onClick={() => {
+              window.location.reload();
+            }}
+          >
+            Закончить игру
+          </Button>
+        </ModalBody>
       </Modal>
     </Container>
   );
