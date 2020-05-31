@@ -15,7 +15,7 @@ import randomInt from "../utils/randomInt";
 const App = () => {
   const [locationIndex, setLocationIndex] = React.useState(0);
   const [locationIsVisible, setLocationVisibility] = React.useState(false);
-  const [players, setPlayers] = React.useState(2);
+  const [players, setPlayers] = React.useState(10);
   const [currentPlayer, setCurrentPlayer] = React.useState(0);
   const [hintIsVisible, setHintVisibility] = React.useState(false);
   const [timerIsOpen, setTimerIsOpen] = React.useState(false);
