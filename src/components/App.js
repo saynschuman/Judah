@@ -1,24 +1,20 @@
 import React from "react";
-import {
-  Container,
-  InputGroup,
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-} from "reactstrap";
+import { Container, InputGroup, Button, Modal, ModalHeader, ModalBody, CardImg } from "reactstrap";
 import "./App.scss";
 import locations from "../data/locations";
 import randomInt from "../utils/randomInt";
 import Select from "react-select";
 import values from "./values";
+import phone from "./img/phone.png";
+import location from "./img/location2.png";
+import judah from "./img/judah.svg";
 
 const options = values.map((value) => ({ value, label: value }));
 
 const App = () => {
   const [locationIndex, setLocationIndex] = React.useState(0);
   const [locationIsVisible, setLocationVisibility] = React.useState(false);
-  const [players, setPlayers] = React.useState(options[9]);
+  const [players, setPlayers] = React.useState(options[2]);
   const [currentPlayer, setCurrentPlayer] = React.useState(0);
   const [hintIsVisible, setHintVisibility] = React.useState(false);
   const [timerIsOpen, setTimerIsOpen] = React.useState(false);
@@ -68,7 +64,10 @@ const App = () => {
       <Modal isOpen={locationIsVisible} className="text-center">
         {currentPlayer === judahIndex ? (
           <>
-            <ModalHeader className="w-100 d-block">Иуда</ModalHeader>
+            <ModalHeader className="w-100 d-block">
+              <CardImg src={judah} className="judah" />
+              <div>Иуда</div>
+            </ModalHeader>
             <ModalBody className="text-justify">
               Ты Иуда. <br /> Постарайся узнать локацию, о которой говорят местные.
             </ModalBody>
@@ -84,7 +83,10 @@ const App = () => {
           </>
         ) : (
           <>
-            <ModalHeader className="w-100 d-block">{locations[locationIndex]}</ModalHeader>
+            <ModalHeader className="w-100 d-block">
+              <CardImg src={location} className="location" />
+              <div>{locations[locationIndex]}</div>
+            </ModalHeader>
             <ModalBody className="text-justify">
               Ты местный. <br /> Все игроки кроме Иуды знают эту локацию. Задавай вопросы игрокам,
               чтобы вычислить кто из них Иуда.
@@ -103,8 +105,11 @@ const App = () => {
       </Modal>
       <Modal isOpen={hintIsVisible} className="text-center">
         <ModalHeader className="w-100 d-block">
-          Передай телефон {currentPlayer === 0 ? "первому" : "следующему"}
-          <span className="pl-1">игроку</span>
+          <CardImg src={phone} className="phone"/>
+          <div>
+            Передай телефон {currentPlayer === 0 ? "первому" : "следующему"}
+            <span className="pl-1">игроку</span>
+          </div>
         </ModalHeader>
         <ModalBody>Нажми ок когда будешь готов</ModalBody>
         <Button

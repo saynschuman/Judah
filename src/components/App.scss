@@ -5,3 +5,18 @@
 .button {
   width: 25%;
 }
+
+img {
+  &.location {
+    width: 135px !important;
+    margin-left: 20px;
+  }
+  &.judah {
+    width: 150px !important;
+  }
+  &.phone {
+    width: 260px !important;
+  }
+  height: auto;
+  margin-bottom: 20px;
+}
