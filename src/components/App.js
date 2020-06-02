@@ -1,27 +1,40 @@
 import React from "react";
 import {
   Container,
-  Input,
   InputGroup,
-  InputGroupAddon,
   Button,
   Modal,
   ModalHeader,
   ModalBody,
 } from "reactstrap";
+import "./App.scss";
 import locations from "../data/locations";
 import randomInt from "../utils/randomInt";
+import Select from "react-select";
+import values from "./values";
+
+const options = values.map((value) => ({ value, label: value }));
 
 const App = () => {
   const [locationIndex, setLocationIndex] = React.useState(0);
   const [locationIsVisible, setLocationVisibility] = React.useState(false);
-  const [players, setPlayers] = React.useState(10);
+  const [players, setPlayers] = React.useState(options[9]);
   const [currentPlayer, setCurrentPlayer] = React.useState(0);
   const [hintIsVisible, setHintVisibility] = React.useState(false);
   const [timerIsOpen, setTimerIsOpen] = React.useState(false);
   const [judahIndex, setJudahIndex] = React.useState(0);
+
+  const clearState = () => {
+    setLocationIndex(0);
+    setLocationVisibility(false);
+    setCurrentPlayer(0);
+    setHintVisibility(false);
+    setTimerIsOpen(false);
+    setJudahIndex(0);
+  };
+
   const nextPlayer = () => {
-    if (players === currentPlayer) {
+    if (players.value === currentPlayer) {
       setHintVisibility(false);
       setLocationVisibility(false);
       setTimerIsOpen(true);
@@ -34,31 +47,30 @@ const App = () => {
   return (
     <Container className="pt-3">
       <h4 className="text-center mb-4">Выберите количество игроков</h4>
-      <InputGroup>
-        <Input
-          type="number"
+      <InputGroup className="d-flex justify-content-between">
+        <Select
+          className="select"
+          options={options}
           value={players}
-          onChange={(e) => setPlayers(Number(e.target.value))}
+          onChange={(e) => setPlayers(e)}
         />
-        <InputGroupAddon addonType="append">
-          <Button
-            color="secondary"
-            onClick={() => {
-              setHintVisibility(true);
-              setJudahIndex(randomInt(1, players));
-            }}
-          >
-            Начать
-          </Button>
-        </InputGroupAddon>
+        <Button
+          className="button"
+          color="secondary"
+          onClick={() => {
+            setHintVisibility(true);
+            setJudahIndex(randomInt(1, players.value));
+          }}
+        >
+          Начать
+        </Button>
       </InputGroup>
       <Modal isOpen={locationIsVisible} className="text-center">
         {currentPlayer === judahIndex ? (
           <>
             <ModalHeader className="w-100 d-block">Иуда</ModalHeader>
             <ModalBody className="text-justify">
-              Ты Иуда. <br /> Постарайся узнать локацию, о которой говорят
-              местные.
+              Ты Иуда. <br /> Постарайся узнать локацию, о которой говорят местные.
             </ModalBody>
             <Button
               color="primary"
@@ -72,12 +84,10 @@ const App = () => {
           </>
         ) : (
           <>
-            <ModalHeader className="w-100 d-block">
-              {locations[locationIndex]}
-            </ModalHeader>
+            <ModalHeader className="w-100 d-block">{locations[locationIndex]}</ModalHeader>
             <ModalBody className="text-justify">
-              Ты местный. <br /> Все игроки кроме Иуды знают эту локацию.
-              Задавай вопросы игрокам, чтобы вычислить кто из них Иуда.
+              Ты местный. <br /> Все игроки кроме Иуды знают эту локацию. Задавай вопросы игрокам,
+              чтобы вычислить кто из них Иуда.
             </ModalBody>
             <Button
               color="primary"
@@ -113,13 +123,7 @@ const App = () => {
       <Modal isOpen={timerIsOpen} className="text-center">
         <ModalHeader className="w-100 d-block">Время пошло!</ModalHeader>
         <ModalBody>
-          <Button
-            color="primary"
-            className="m-2"
-            onClick={() => {
-              window.location.reload();
-            }}
-          >
+          <Button color="primary" className="m-2" onClick={() => clearState()}>
             Закончить игру
           </Button>
         </ModalBody>
