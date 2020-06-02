@@ -10,7 +10,7 @@ const Timer = (props) => {
     if (props.timer > 0) {
       timeout = setTimeout(() => props.setTimer(props.timer - 1), 1000);
     } else {
-      console.log("finished");
+      props.startSound();
       clearTimeout(timeout);
     }
     return () => clearTimeout(timeout);
@@ -37,6 +37,7 @@ Timer.propTypes = {
   clearState: PropTypes.func,
   setTimer: PropTypes.func,
   timer: PropTypes.number,
+  startSound: PropTypes.func,
 };
 
 export default Timer;

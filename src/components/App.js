@@ -9,6 +9,7 @@ import phone from "./img/phone.png";
 import location from "./img/location2.png";
 import judah from "./img/judah.svg";
 import Timer from "./Timer";
+import sound from "./mp3/mozart.mp3";
 
 const options = values.map((value) => ({ value, label: value }));
 const minutes = values.map((value) => ({ value, label: `${value} мин.` }));
@@ -22,7 +23,7 @@ const App = () => {
   const [timerIsOpen, setTimerIsOpen] = React.useState(false);
   const [judahIndex, setJudahIndex] = React.useState(0);
   const [initialTimer, setInitialTimer] = React.useState(minutes[0]);
-  const [timer, setTimer] = React.useState(60);
+  const [timer, setTimer] = React.useState(10);
 
   const clearState = () => {
     setLocationIndex(0);
@@ -31,7 +32,8 @@ const App = () => {
     setHintVisibility(false);
     setTimerIsOpen(false);
     setJudahIndex(0);
-    setTimer(initialTimer.value);
+    setTimer(initialTimer.value * 60);
+    stopSound()
   };
 
   const nextPlayer = () => {
@@ -48,8 +50,18 @@ const App = () => {
 
   const handleSetTimer = (data) => {
     const min = data.value;
-    setInitialTimer({ value: min * 60, label: `${min} мин.` });
+    setInitialTimer({ value: min, label: `${min} мин.` });
     setTimer(min * 60);
+  };
+
+  const audio = new Audio(sound)
+
+  const startSound = () => {
+    audio.play();
+  };
+
+  const stopSound = () => {
+    audio.pause();
   };
 
   return (
@@ -147,6 +159,7 @@ const App = () => {
           clearState={clearState}
           timer={timer}
           setTimer={setTimer}
+          startSound={startSound}
         />
       )}
     </Container>

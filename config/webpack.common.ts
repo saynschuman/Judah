@@ -61,6 +61,14 @@ const commonConfig: webpack.Configuration = {
           },
         ],
       },
+      {
+        test: /\.(mp3|wav)$/i,
+        use: [
+          {
+            loader: "file-loader",
+          },
+        ],
+      },
     ],
   },
 };
