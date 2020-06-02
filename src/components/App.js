@@ -8,8 +8,10 @@ import values from "./values";
 import phone from "./img/phone.png";
 import location from "./img/location2.png";
 import judah from "./img/judah.svg";
+import Timer from "./Timer";
 
 const options = values.map((value) => ({ value, label: value }));
+const minutes = values.map((value) => ({ value, label: `${value} мин.` }));
 
 const App = () => {
   const [locationIndex, setLocationIndex] = React.useState(0);
@@ -19,6 +21,8 @@ const App = () => {
   const [hintIsVisible, setHintVisibility] = React.useState(false);
   const [timerIsOpen, setTimerIsOpen] = React.useState(false);
   const [judahIndex, setJudahIndex] = React.useState(0);
+  const [initialTimer, setInitialTimer] = React.useState(minutes[0]);
+  const [timer, setTimer] = React.useState(60);
 
   const clearState = () => {
     setLocationIndex(0);
@@ -27,6 +31,7 @@ const App = () => {
     setHintVisibility(false);
     setTimerIsOpen(false);
     setJudahIndex(0);
+    setTimer(initialTimer.value);
   };
 
   const nextPlayer = () => {
@@ -40,27 +45,38 @@ const App = () => {
       setLocationVisibility(false);
     }
   };
+
+  const handleSetTimer = (data) => {
+    const min = data.value;
+    setInitialTimer({ value: min * 60, label: `${min} мин.` });
+    setTimer(min * 60);
+  };
+
   return (
     <Container className="pt-3">
-      <h4 className="text-center mb-4">Выберите количество игроков</h4>
       <InputGroup className="d-flex justify-content-between">
-        <Select
-          className="select"
-          options={options}
-          value={players}
-          onChange={(e) => setPlayers(e)}
-        />
-        <Button
-          className="button"
-          color="secondary"
-          onClick={() => {
-            setHintVisibility(true);
-            setJudahIndex(randomInt(1, players.value));
-          }}
-        >
-          Начать
-        </Button>
+        <h5 className="text-center">Выберите количество игроков</h5>
+        <Select className="w-100" options={options} value={players} onChange={setPlayers} />
       </InputGroup>
+      <InputGroup>
+        <h5 className="text-center mt-1">Установите время</h5>
+        <Select
+          className="w-100 mb-2"
+          options={minutes}
+          value={initialTimer}
+          onChange={handleSetTimer}
+        />
+      </InputGroup>
+      <Button
+        color="primary"
+        className="w-100"
+        onClick={() => {
+          setHintVisibility(true);
+          setJudahIndex(randomInt(1, players.value));
+        }}
+      >
+        Начать
+      </Button>
       <Modal isOpen={locationIsVisible} className="text-center">
         {currentPlayer === judahIndex ? (
           <>
@@ -105,7 +121,7 @@ const App = () => {
       </Modal>
       <Modal isOpen={hintIsVisible} className="text-center">
         <ModalHeader className="w-100 d-block">
-          <CardImg src={phone} className="phone"/>
+          <CardImg src={phone} className="phone" />
           <div>
             Передай телефон {currentPlayer === 0 ? "первому" : "следующему"}
             <span className="pl-1">игроку</span>
@@ -125,14 +141,14 @@ const App = () => {
           Ok
         </Button>
       </Modal>
-      <Modal isOpen={timerIsOpen} className="text-center">
-        <ModalHeader className="w-100 d-block">Время пошло!</ModalHeader>
-        <ModalBody>
-          <Button color="primary" className="m-2" onClick={() => clearState()}>
-            Закончить игру
-          </Button>
-        </ModalBody>
-      </Modal>
+      {timerIsOpen && (
+        <Timer
+          timerIsOpen={timerIsOpen}
+          clearState={clearState}
+          timer={timer}
+          setTimer={setTimer}
+        />
+      )}
     </Container>
   );
 };
